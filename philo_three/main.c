@@ -6,7 +6,7 @@
 /*   By: sgertrud <msnazarow@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 10:22:58 by sgertrud          #+#    #+#             */
-/*   Updated: 2021/02/14 18:32:05 by sgertrud         ###   ########.fr       */
+/*   Updated: 2021/02/14 19:54:36 by sgertrud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,21 @@ void	*free_exit(t_phyl *phyls)
 	return (0);
 }
 
+void	*eat_check(void *arg)
+{
+	int		i;
+	t_phyl	*phyls;
+
+	phyls = (t_phyl*)arg;
+	i = -1;
+	while (++i < phyls->arg->number)
+		sem_wait(phyls[i].sync);
+	sem_wait(phyls->arg->print);
+	printf("All philosophers are alive!\n");
+	sem_post(phyls->arg->kill_);
+	return (0);
+}
+
 int		main(int argc, char const *argv[])
 {
 	int					number;
@@ -92,6 +107,7 @@ int		main(int argc, char const *argv[])
 		pids = malloc(number * sizeof(pid_t));
 		init(phyls, pids);
 		pthread_create(&phyls->arg->order, NULL, order_check, phyls);
+		pthread_create(&phyls->arg->food, NULL, eat_check, phyls);
 		dead_exit(phyls->arg->kill_, number, pids);
 		sem_wait(phyls->arg->print);
 		printf("All philosophers are alive!\n");

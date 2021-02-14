@@ -6,22 +6,11 @@
 /*   By: sgertrud <msnazarow@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 18:41:22 by sgertrud          #+#    #+#             */
-/*   Updated: 2021/02/14 18:44:46 by sgertrud         ###   ########.fr       */
+/*   Updated: 2021/02/14 19:26:50 by sgertrud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
-
-void	sync_hungry(t_phyl *phyl)
-{
-	phyl->dinners--;
-	if (!phyl->dinners)
-	{
-		sem_wait(phyl->arg->sync);
-		phyl->arg->hungry--;
-		sem_post(phyl->arg->sync);
-	}
-}
 
 void	*phylo_life(void *arg)
 {
@@ -41,7 +30,9 @@ void	*phylo_life(void *arg)
 		waitms(phyl->arg->t_eat, phyl->arg);
 		sem_post(phyl->arg->forks);
 		sem_post(phyl->arg->forks);
-		sync_hungry(phyl);
+		phyl->dinners--;
+		if (!phyl->dinners)
+			sem_post(phyl->sync);
 		print_message("%ld %d is sleeping\n", arg);
 		waitms(phyl->arg->t_sleep, phyl->arg);
 		print_message("%ld %d is thinking\n", arg);

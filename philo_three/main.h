@@ -6,7 +6,7 @@
 /*   By: sgertrud <msnazarow@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 01:02:27 by sgertrud          #+#    #+#             */
-/*   Updated: 2021/02/14 19:21:24 by sgertrud         ###   ########.fr       */
+/*   Updated: 2021/02/14 19:28:46 by sgertrud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct	s_arg
 	sem_t			*print;
 	sem_t			*forks;
 	pthread_t		order;
+	pthread_t		food;
 }				t_arg;
 
 typedef struct	s_phyl
